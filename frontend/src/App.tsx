@@ -12,23 +12,31 @@ import {
   verifyOwner
 } from './api';
 
-const emptyItemForm: ItemPayload = {
-  name: '',
-  description: '',
-  category: '',
-  location: '',
-  faculty: '',
-  reportDate: new Date().toISOString().slice(0, 16),
-  photoUrl: '',
-  characteristics: ''
-};
+function getLocalDateTimeInputValue() {
+  const now = new Date();
+  const timezoneOffset = now.getTimezoneOffset() * 60_000;
+  return new Date(now.getTime() - timezoneOffset).toISOString().slice(0, 16);
+}
+
+function createEmptyItemForm(): ItemPayload {
+  return {
+    name: '',
+    description: '',
+    category: '',
+    location: '',
+    faculty: '',
+    reportDate: getLocalDateTimeInputValue(),
+    photoUrl: '',
+    characteristics: ''
+  };
+}
 
 const statuses: ItemStatus[] = ['Reported', 'InCustody', 'Claimed', 'Returned'];
 
 export default function App() {
   const [items, setItems] = useState<Item[]>([]);
   const [selectedItem, setSelectedItem] = useState<Item | null>(null);
-  const [itemForm, setItemForm] = useState<ItemPayload>(emptyItemForm);
+  const [itemForm, setItemForm] = useState<ItemPayload>(createEmptyItemForm);
   const [mode, setMode] = useState<'lost' | 'found'>('lost');
   const [filters, setFilters] = useState({ status: '', location: '', faculty: '', date: '' });
   const [claimForm, setClaimForm] = useState({
@@ -77,11 +85,15 @@ export default function App() {
       reportDate: new Date(itemForm.reportDate).toISOString(),
       ...(photoUrl?.trim() ? { photoUrl: photoUrl.trim() } : {})
     };
-    const created = mode === 'lost' ? await createLostItem(payload) : await createFoundItem(payload);
-    setItemForm(emptyItemForm);
-    setSelectedItem(created);
-    await loadItems();
-    setMessage('Objeto registrado correctamente.');
+    try {
+      const created = mode === 'lost' ? await createLostItem(payload) : await createFoundItem(payload);
+      setItemForm(createEmptyItemForm());
+      setSelectedItem(created);
+      await loadItems();
+      setMessage('Objeto registrado correctamente.');
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : 'No se pudo registrar el objeto.');
+    }
   }
 
   async function submitClaim(event: FormEvent<HTMLFormElement>) {

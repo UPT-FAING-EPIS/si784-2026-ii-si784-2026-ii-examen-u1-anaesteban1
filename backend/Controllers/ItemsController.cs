@@ -15,8 +15,15 @@ public sealed class ItemsController(IItemService itemService) : ControllerBase
         CreateItemRequest request,
         CancellationToken cancellationToken)
     {
-        var item = await itemService.CreateLostItemAsync(request, cancellationToken);
-        return CreatedAtAction(nameof(GetItem), new { id = item.Id }, item);
+        try
+        {
+            var item = await itemService.CreateLostItemAsync(request, cancellationToken);
+            return CreatedAtAction(nameof(GetItem), new { id = item.Id }, item);
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(ex.Message);
+        }
     }
 
     [HttpPost("/found-items")]
@@ -26,8 +33,15 @@ public sealed class ItemsController(IItemService itemService) : ControllerBase
         CreateItemRequest request,
         CancellationToken cancellationToken)
     {
-        var item = await itemService.CreateFoundItemAsync(request, cancellationToken);
-        return CreatedAtAction(nameof(GetItem), new { id = item.Id }, item);
+        try
+        {
+            var item = await itemService.CreateFoundItemAsync(request, cancellationToken);
+            return CreatedAtAction(nameof(GetItem), new { id = item.Id }, item);
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(ex.Message);
+        }
     }
 
     [HttpGet("/items")]
