@@ -15,7 +15,7 @@ COPY backend/ backend/
 COPY --from=frontend-build /frontend/dist backend/wwwroot
 RUN dotnet publish backend/LostAndFound.Api.csproj -c Release -o /app/publish --no-restore
 
-FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS runtime
+FROM mcr.microsoft.com/dotnet/aspnet:10.0-alpine AS runtime
 WORKDIR /app
 EXPOSE 8080
 ENV ASPNETCORE_URLS=http://+:8080

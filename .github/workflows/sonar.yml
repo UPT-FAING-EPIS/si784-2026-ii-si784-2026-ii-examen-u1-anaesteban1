@@ -28,7 +28,7 @@ jobs:
           project_key="${SONAR_PROJECT_KEY:-lost-found-university}"
           organization="${SONAR_ORGANIZATION:-}"
           if [ -z "$organization" ]; then
-            organization="$(curl -fsS -u "${SONAR_TOKEN}:" "https://sonarcloud.io/api/organizations/search" | jq -r '.organizations[0].key // empty')"
+            organization="$(curl -fsS -u "${SONAR_TOKEN}:" "https://sonarcloud.io/api/organizations/search?member=true" | jq -r '.organizations[0].key // empty')"
           fi
           if [ -z "$organization" ]; then
             echo "No SonarCloud organization was found for SONAR_TOKEN."
