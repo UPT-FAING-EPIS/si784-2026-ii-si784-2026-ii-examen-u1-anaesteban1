@@ -1,0 +1,27 @@
+name: sonar
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: "10.0.x"
+      - name: Install Sonar scanner
+        run: dotnet tool install --global dotnet-sonarscanner
+      - name: Restore
+        run: dotnet restore LostAndFoundUniversity.sln -m:1
+      - name: Begin Sonar analysis
+        run: dotnet sonarscanner begin /k:"lost-found-university" /o:"upt-faing-epis" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.qualitygate.wait=true
+      - name: Build
+        run: dotnet build LostAndFoundUniversity.sln --configuration Release --no-restore -m:1
+      - name: Test
+        run: dotnet test LostAndFoundUniversity.sln --configuration Release --no-build -m:1
+      - name: End Sonar analysis
+        run: dotnet sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"

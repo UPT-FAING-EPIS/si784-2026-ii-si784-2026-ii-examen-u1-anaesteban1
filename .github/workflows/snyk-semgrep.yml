@@ -1,0 +1,42 @@
+name: snyk-semgrep
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  security:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: "10.0.x"
+      - uses: actions/setup-node@v5
+        with:
+          node-version: "24"
+      - uses: snyk/actions/setup@master
+      - name: Restore backend
+        run: dotnet restore LostAndFoundUniversity.sln -m:1
+      - name: Snyk code and dependencies
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        run: snyk test --all-projects --json-file-output=snyk-code.json
+      - name: Semgrep
+        uses: semgrep/semgrep-action@v1
+        with:
+          config: p/owasp-top-ten
+      - name: Build backend image
+        run: docker build -f backend/Dockerfile -t lost-found-api:ci .
+      - name: Snyk container
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        run: snyk container test lost-found-api:ci --file=backend/Dockerfile --json-file-output=snyk-container.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: security-reports
+          path: |
+            snyk-code.json
+            snyk-container.json
