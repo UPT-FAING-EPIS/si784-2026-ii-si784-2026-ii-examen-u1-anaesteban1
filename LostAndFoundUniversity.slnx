@@ -1,0 +1,8 @@
+<Solution>
+  <Folder Name="/backend/">
+    <Project Path="backend/LostAndFound.Api.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/LostAndFound.Tests.csproj" />
+  </Folder>
+</Solution>

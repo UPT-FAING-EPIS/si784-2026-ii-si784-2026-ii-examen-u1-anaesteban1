@@ -1,0 +1,13 @@
+**/bin/
+**/obj/
+frontend/node_modules/
+frontend/dist/
+TestResults/
+.terraform/
+*.tfstate
+*.tfstate.*
+*.trx
+*.log
+*.tsbuildinfo
+.env
+.env.local

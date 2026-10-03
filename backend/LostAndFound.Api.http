@@ -1,0 +1,71 @@
+@baseUrl = http://localhost:5195
+@itemId = 00000000-0000-0000-0000-000000000000
+@claimId = 00000000-0000-0000-0000-000000000000
+
+### Registrar objeto perdido
+POST {{baseUrl}}/lost-items
+Content-Type: application/json
+
+{
+  "name": "Laptop Lenovo",
+  "description": "Laptop encontrada en aula B-203.",
+  "category": "Electronica",
+  "location": "Aula B-203",
+  "faculty": "Ingenieria",
+  "reportDate": "2026-10-02T20:00:00Z",
+  "photoUrl": "https://example.com/laptop.jpg",
+  "characteristics": "Sticker de la universidad en la tapa."
+}
+
+### Registrar objeto encontrado
+POST {{baseUrl}}/found-items
+Content-Type: application/json
+
+{
+  "name": "Mochila negra",
+  "description": "Mochila con cuadernos.",
+  "category": "Accesorios",
+  "location": "Biblioteca Central",
+  "faculty": "Ingenieria",
+  "reportDate": "2026-10-02T20:00:00Z",
+  "characteristics": "Llavero azul."
+}
+
+### Listar objetos
+GET {{baseUrl}}/items
+
+### Filtrar por estado
+GET {{baseUrl}}/items?status=Claimed
+
+### Obtener detalle
+GET {{baseUrl}}/items/{{itemId}}
+
+### Reclamar objeto
+POST {{baseUrl}}/items/{{itemId}}/claim
+Content-Type: application/json
+
+{
+  "claimantName": "Ana Esteban",
+  "claimantEmail": "ana.esteban@example.edu",
+  "ownershipEvidence": "Puede describir el llavero y el contenido interno."
+}
+
+### Verificar propietario
+POST {{baseUrl}}/items/{{itemId}}/verify-owner
+Content-Type: application/json
+
+{
+  "claimId": "{{claimId}}"
+}
+
+### Registrar devolucion
+POST {{baseUrl}}/items/{{itemId}}/return
+Content-Type: application/json
+
+{
+  "claimId": "{{claimId}}",
+  "responsiblePerson": "Oficina de Bienestar Universitario",
+  "returnDate": "2026-10-02T21:00:00Z",
+  "ownerConfirmation": true,
+  "notes": "Entrega registrada con conformidad."
+}
