@@ -123,10 +123,10 @@ dotnet test LostAndFoundUniversity.sln --no-build -m:1
 ## URLs de entrega
 
 Aplicacion publicada:
-PENDIENTE
+https://lost-found-university-api.azurewebsites.net
 
 Repositorio:
 https://github.com/UPT-FAING-EPIS/si784-2026-ii-si784-2026-ii-examen-u1-anaesteban1
 
 Sonar:
-PENDIENTE
+https://sonarcloud.io/dashboard?id=lost-found-university_si784-2026-ii-si784-2026-ii-examen-u1-anaesteban1

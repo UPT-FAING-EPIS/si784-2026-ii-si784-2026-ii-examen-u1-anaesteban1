@@ -71,7 +71,12 @@ export default function App() {
       return;
     }
 
-    const payload = { ...itemForm, reportDate: new Date(itemForm.reportDate).toISOString() };
+    const { photoUrl, ...requiredItemFields } = itemForm;
+    const payload = {
+      ...requiredItemFields,
+      reportDate: new Date(itemForm.reportDate).toISOString(),
+      ...(photoUrl?.trim() ? { photoUrl: photoUrl.trim() } : {})
+    };
     const created = mode === 'lost' ? await createLostItem(payload) : await createFoundItem(payload);
     setItemForm(emptyItemForm);
     setSelectedItem(created);
