@@ -59,7 +59,9 @@ resource "azurerm_linux_web_app" "api" {
   }
 
   app_settings = {
-    "ASPNETCORE_ENVIRONMENT"     = "Production"
-    "POSTGRES_CONNECTION_STRING" = "Host=${azurerm_postgresql_flexible_server.main.fqdn};Port=5432;Database=${azurerm_postgresql_flexible_server_database.main.name};Username=${azurerm_postgresql_flexible_server.main.administrator_login};Password=${random_password.postgres_admin.result};SSL Mode=Require;Trust Server Certificate=true"
+    "ASPNETCORE_ENVIRONMENT"               = "Production"
+    "ConnectionStrings__DefaultConnection" = "Host=${azurerm_postgresql_flexible_server.main.fqdn};Port=5432;Database=${azurerm_postgresql_flexible_server_database.main.name};Username=${azurerm_postgresql_flexible_server.main.administrator_login};Password=${random_password.postgres_admin.result};SSL Mode=Require;Trust Server Certificate=true"
+    "POSTGRES_CONNECTION_STRING"           = "Host=${azurerm_postgresql_flexible_server.main.fqdn};Port=5432;Database=${azurerm_postgresql_flexible_server_database.main.name};Username=${azurerm_postgresql_flexible_server.main.administrator_login};Password=${random_password.postgres_admin.result};SSL Mode=Require;Trust Server Certificate=true"
+    "WEBSITES_PORT"                        = "8080"
   }
 }
